@@ -1,0 +1,30 @@
+version: '2.0'
+services:
+  integration_tests:
+    build: .
+    image: integration_tests
+    env_file:
+      - user-variables.env
+    volumes:
+      - ../../../protos/.gen/pb_python/:/home/tests/protos
+      - ./certs/:/home/certs
+    depends_on:
+      - user_service
+  user_service:
+    build: ../../../user
+    image: user_service
+    env_file:
+      - user-variables.env
+    expose:
+     - 50050
+    volumes:
+      - ../../../protos/.gen/pb_python/:/home/app/user/protos
+      - ./certs/:/home/certs
+    depends_on:
+      - user_db
+  user_db:
+    image: mariadb
+    env_file:
+      - user-variables.env
+    logging:
+      driver: "none"

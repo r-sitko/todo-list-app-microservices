@@ -1,0 +1,9 @@
+protobuf
+grpcio
+mysql-connector-python
+grift
+PyJWT
+SQLAlchemy
+SQLAlchemy-Utils
+validate_email
+cryptography

@@ -1,0 +1,7 @@
+protobuf
+grpcio
+grift
+PyJWT
+cryptography
+SQLAlchemy
+mysql-connector-python

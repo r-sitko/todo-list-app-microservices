@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+service ToDo {
+  rpc CreateToDo (CreateToDoReq) returns (CreateToDoRsp) {}
+  rpc GetToDo (GetToDoReq) returns (GetToDoRsp) {}
+  rpc DeleteToDo (DeleteToDoReq) returns (DeleteToDoRsp) {}
+  rpc UpdateToDo (UpdateToDoReq) returns (UpdateToDoRsp) {}
+  rpc ListToDo (ListToDoReq) returns (ListToDoRsp) {}
+}
+
+message ToDoEntry {
+	int32 id = 1;
+	string title = 2;
+	string text = 3;
+	google.protobuf.Timestamp created_at = 4;
+	google.protobuf.Timestamp updated_at = 5;
+}
+
+message CreateToDoReq {
+  ToDoEntry item = 2;
+}
+
+message CreateToDoRsp {
+  int32 id = 1;
+}
+
+message GetToDoReq {
+  int32 id = 1;
+}
+
+message GetToDoRsp {
+  ToDoEntry item = 1;
+}
+
+message DeleteToDoReq {
+  int32 id = 1;
+}
+
+message DeleteToDoRsp {
+}
+
+message UpdateToDoReq {
+  ToDoEntry item = 1;
+}
+
+message UpdateToDoRsp {
+}
+
+message ListToDoReq {
+  uint32 limit = 1;
+}
+
+message ListToDoRsp {
+  repeated ToDoEntry items = 1;
+}

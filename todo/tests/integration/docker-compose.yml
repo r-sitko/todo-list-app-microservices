@@ -1,0 +1,30 @@
+version: '2.0'
+services:
+  integration_tests:
+    build: .
+    image: integration_tests
+    env_file:
+      - todo-variables.env
+    volumes:
+      - ../../../protos/.gen/pb_python/:/home/tests/protos
+      - ./certs/:/home/certs
+    depends_on:
+      - todo_service
+  todo_service:
+    build: ../../../todo
+    image: todo_service
+    env_file:
+      - todo-variables.env
+    expose:
+     - 50050
+    volumes:
+      - ../../../protos/.gen/pb_python/:/home/app/todo/protos
+      - ./certs/:/home/certs
+    depends_on:
+      - todo_db
+  todo_db:
+    image: mariadb
+    env_file:
+      - todo-variables.env
+    logging:
+      driver: "none"

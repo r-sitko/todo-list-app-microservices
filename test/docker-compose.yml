@@ -1,0 +1,63 @@
+version: '2.0'
+services:
+  e2e_tests:
+    build: .
+    image: e2e_tests
+    env_file:
+      - gateway-variables.env
+    volumes:
+      - ../protos/.gen/pb_python/:/home/tests/protos
+      - ./certs/:/home/certs
+    depends_on:
+      - todo_service
+      - user_service
+      - gateway_service
+  todo_service:
+    build: ../todo
+    image: todo_service
+    expose:
+      - 50050
+    env_file:
+      - todo-variables.env
+    volumes:
+      - ../protos/.gen/pb_python/:/home/app/todo/protos
+      - ./certs/:/home/certs
+    depends_on:
+      - todo_db
+  todo_db:
+    image: mariadb
+    env_file:
+      - todo-variables.env
+    logging:
+      driver: "none"
+  user_service:
+    build: ../user
+    image: user_service
+    expose:
+      - 50050
+    env_file:
+      - user-variables.env
+    volumes:
+      - ../protos/.gen/pb_python/:/home/app/user/protos
+      - ./certs/:/home/certs
+    depends_on:
+      - user_db
+  user_db:
+    image: mariadb
+    env_file:
+      - user-variables.env
+    logging:
+      driver: "none"
+  gateway_service:
+    build: ../gateway
+    image: gateway_service
+    env_file:
+      - gateway-variables.env
+    expose:
+      - 50050
+    volumes:
+      - ../protos/.gen/pb_cpp/:/home/app/protos
+      - ./certs/:/home/certs
+    depends_on:
+      - user_service
+      - todo_service

@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+service User {
+  rpc Login (LoginReq) returns (LoginRsp) {}
+  rpc Register (RegisterReq) returns (RegisterRsp) {}
+}
+
+message LoginReq {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginRsp {
+  string jwt_token = 1;
+  string expiration = 2;
+}
+
+message RegisterReq {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+}
+
+message RegisterRsp {
+
+}
