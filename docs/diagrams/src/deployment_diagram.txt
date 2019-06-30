@@ -1,0 +1,45 @@
+@startuml
+
+title Deployment diagram
+
+rectangle backend {
+  component user_service [
+    **User service**
+    ----
+    registering users
+    managing user accounts
+    authentication
+    JWT token generation
+  ]
+  database "User service db" as user_service_db
+
+  component todo_service [
+    **Todo service**
+    ----
+    creating todos
+    getting todos
+    listing todos
+    updating todos
+    deleting todos
+  ]
+  database "Todo service db" as todo_service_db
+
+  component gateway_api_service [
+    **Gateway API service**
+    ----
+    SSL encryption
+    JWT token verification
+    authorization
+    orchestration
+  ]
+}
+
+actor user
+user -- gateway_api_service : gRPC with SSL
+
+user_service -- user_service_db  : SQL
+todo_service -- todo_service_db  : SQL
+gateway_api_service -- user_service : user service interface
+gateway_api_service -- todo_service : todo service interface
+
+@enduml

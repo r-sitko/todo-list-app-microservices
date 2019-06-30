@@ -1,0 +1,20 @@
+@startuml
+
+title Create todo
+
+!includesub sequence_participants.txt!todo
+
+user -> gateway_api_service: CreateToDoReq(item) + JWT user token
+gateway_api_service -> gateway_api_service: check and validate JWT token
+
+alt JWT token exists and JWT token validation success
+  gateway_api_service -> todo_service: CreateToDoReq(item) + JWT user token
+  todo_service -> todo_service_db: insert todo
+  todo_service <-- todo_service_db
+  gateway_api_service <-- todo_service: CreateToDoRsp()
+  user <-- gateway_api_service: CreateToDoRsp()
+else JWT token does not exists or JWT token validation error
+  user <-- gateway_api_service: grpc.StatusCode.UNAUTHENTICATED
+end
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+
+title Login user
+
+!includesub sequence_participants.txt!user
+
+user -> gateway_api_service: LoginReq(username, password)
+gateway_api_service -> user_service: LoginReq(username, password)
+user_service -> user_service_db: select user
+user_service <-- user_service_db
+
+alt user exists
+  user_service -> user_service: validate password
+  alt password matching
+    user_service -> user_service: generate JWT token
+    gateway_api_service <-- user_service: LoginRsp(jwt_token, expiration)
+    user <-- gateway_api_service: LoginRsp(jwt_token, expiration)
+  else password differs
+    gateway_api_service <-- user_service: grpc.StatusCode.UNAUTHENTICATED
+    user <-- gateway_api_service: grpc.StatusCode.UNAUTHENTICATED
+  end
+else user not exists in db
+  gateway_api_service <-- user_service: grpc.StatusCode.UNAUTHENTICATED
+  user <-- gateway_api_service: grpc.StatusCode.UNAUTHENTICATED
+end
+
+@enduml

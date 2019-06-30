@@ -1,0 +1,21 @@
+@startuml
+
+title Register user
+
+!includesub sequence_participants.txt!user
+
+user -> gateway_api_service: RegisterReq(username, password, email)
+gateway_api_service -> user_service: RegisterReq(username, password, email)
+user_service -> user_service: validate RegisterReq
+
+alt successful validation
+  user_service -> user_service_db: insert user
+  user_service <-- user_service_db
+  gateway_api_service <-- user_service: RegisterRsp()
+  user <-- gateway_api_service: RegisterRsp()
+else unsuccessful validation
+  gateway_api_service <-- user_service: grpc.StatusCode.INVALID_ARGUMENT
+  user <-- gateway_api_service: grpc.StatusCode.INVALID_ARGUMENT
+end
+
+@enduml

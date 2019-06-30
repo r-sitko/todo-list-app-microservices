@@ -1,0 +1,21 @@
+@startuml sequence_participants
+
+!startsub todo
+	actor "User" as user
+	box "microservices backend" #LightBlue
+		participant "Gateway API service" as gateway_api_service
+		participant "Todo service" as todo_service
+		database "Todo service db" as todo_service_db
+	end box
+!endsub
+
+!startsub user
+	actor "User" as user
+	box "microservices backend" #LightBlue
+		participant "Gateway API service" as gateway_api_service
+		participant "User service" as user_service
+		database "User service db" as user_service_db
+	end box
+!endsub
+
+@enduml
